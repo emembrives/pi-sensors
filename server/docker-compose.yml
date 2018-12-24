@@ -1,0 +1,42 @@
+version: '3'
+services:
+  influxdb:
+    build: influxdb/.
+    networks:
+      tik_net:
+    volumes:
+      - ./var/log/influxdb:/var/log/influxdb
+      - ./var/lib/influxdb:/var/lib/influxdb
+  telegraf:
+    build: telegraf/.
+    networks:
+      tik_net:
+    volumes:
+      - ./var/log/telegraf:/var/log/telegraf
+      - ./var/lib/telegraf:/var/lib/telegraf
+  kapacitor:
+    build: kapacitor/.
+    networks:
+      tik_net:
+    volumes:
+      - ./var/log/kapacitor:/var/log/kapacitor
+      - ./var/lib/kapacitor:/var/lib/kapacitor
+  chronograf:
+    image: "chronograf:latest"
+    networks:
+      tik_net:
+    ports:
+      # The WebUI for Chronograf is served on port 8888
+      - "8888:8888"
+    volumes:
+      - ./var/log/chronograf:/var/log/chronograf
+      - ./var/lib/chronograf:/var/lib/chronograf
+  mosquitto:
+    image: "eclipse-mosquitto:latest"
+    networks:
+      tik_net:
+    ports:
+      - "1883:1883"
+networks:
+  tik_net:
+    driver: bridge
