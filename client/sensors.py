@@ -1,8 +1,10 @@
 import paho.mqtt.client as mqtt
 import time
 import json
+from envirophat import leds, light, weather
 
-HOST_NAME = "localhost"
+HOST_NAME = "10.1.1.1"
+LOCATION = "FR-PAR-14L-4-PI"
 
 class MeasurementBuilder:
     def __init__(self) -> None:
@@ -24,14 +26,17 @@ def run():
     client = mqtt.Client()
     client.connect(HOST_NAME)
     client.loop_start()
+    leds.off()
+    topic = "sensors/" + LOCATION + "/environment"
     while True:
         builder = MeasurementBuilder()
         builder.measurement = "environment"
         builder.tags["location"] = "FR-TEST-PI"
-        builder.values["temperature"] = 25
-        builder.values["pressure"] = 1011
+        builder.values["temperature"] = weather.temperature()
+        builder.values["pressure"] = weather.pressure()
+        builder.values["light"] = light.light()
         print(builder.build())
-        message = client.publish("sensors/FR-TEST-PI/environment", builder.build())
-        time.sleep(2)
+        message = client.publish(topic, builder.build())
+        time.sleep(10)
 
 run()

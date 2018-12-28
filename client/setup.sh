@@ -1,1 +1,1 @@
-pip3 install --upgrade paho-mqtt
+pip3 install --upgrade paho-mqtt envirophat
