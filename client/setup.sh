@@ -1,1 +1,1 @@
-pip3 install --upgrade paho-mqtt envirophat
+pip3 install --upgrade paho-mqtt bme680
